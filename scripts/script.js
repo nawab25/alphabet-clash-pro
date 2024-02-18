@@ -5,7 +5,7 @@
 //     playGroundSection.classList.remove("hidden");
 // }
 
-//short way by function
+//short way to add and remove class by function
 function hideElementById(elementId) {
     const element = document.getElementById(elementId);
     element.classList.add("hidden");
@@ -19,7 +19,13 @@ function setBgColorById(elementId) {
     element.classList.add('bg-amber-400');
     element.classList.add('text-white');
 }
-function randomAlphabet() {
+function removeBgColorById(elementId) {
+    const element = document.getElementById(elementId);
+    element.classList.remove('bg-amber-400');
+    element.classList.remove('text-white');
+}
+//create random number and alphabet
+function continueGame() {
     const showText = document.getElementById('show-text');
     let str = 'abcdefghijklmnopqrstuvwxyz';
     let string = str.split('');
@@ -29,8 +35,52 @@ function randomAlphabet() {
     setBgColorById(alphabet);
 }
 
+//KeyPress functionality
+function handleKeyPress(event) {
+    let userPressedKey = event.key;
+    let showText = document.getElementById("show-text").innerText;
+    let expectedKey = showText.toLowerCase();
+    if (userPressedKey === expectedKey) {
+        //count score
+        let scoreElement = document.getElementById("score-display");
+        let currentScoreText = scoreElement.innerText;
+        let currentScore = parseInt(currentScoreText);
+        scoreElement.innerText = currentScore + 1;
+        removeBgColorById(expectedKey);
+        continueGame();
+    } else {
+        let lifeElement = document.getElementById("life-display");
+        let currentLifeText = lifeElement.innerText;
+        let currentLife = parseInt(currentLifeText);
+        lifeElement.innerText = currentLife - 1;
+
+        if (currentLife === 1) {
+            gameOver();
+        }
+    }
+
+}
+document.addEventListener('keyup', handleKeyPress);
+
+//Game over function
+function gameOver() {
+    hideElementById('play-ground');
+    showElementById('score');
+    let lastScore = document.getElementById("score-display").innerText;
+    document.getElementById("final-score").innerText = lastScore;
+}
+//play button click functionality
 function play() {
     hideElementById('home');
     showElementById('play-ground');
-    randomAlphabet();
+
+    //code for play again button
+    hideElementById('score');
+    document.getElementById('life-display').innerText = 5;
+    let showText = document.getElementById("show-text").innerText;
+    let expectedKey = showText.toLowerCase();
+    removeBgColorById(expectedKey);
+    let scoreElement = document.getElementById("score-display");
+    scoreElement.innerText = 0;
+    continueGame();
 }
