@@ -5,6 +5,9 @@
 //     playGroundSection.classList.remove("hidden");
 // }
 
+
+let audio = new Audio();
+let isPlayOn = false;
 //short way to add and remove class by function
 function hideElementById(elementId) {
     const element = document.getElementById(elementId);
@@ -37,10 +40,13 @@ function continueGame() {
 
 //KeyPress functionality
 function handleKeyPress(event) {
+    if(isPlayOn === false) return;
     let userPressedKey = event.key;
     let showText = document.getElementById("show-text").innerText;
     let expectedKey = showText.toLowerCase();
     if (userPressedKey === expectedKey) {
+        audio.src = "../audio/success.mp3";
+        audio.play();
         //count score
         let scoreElement = document.getElementById("score-display");
         let currentScoreText = scoreElement.innerText;
@@ -49,6 +55,8 @@ function handleKeyPress(event) {
         removeBgColorById(expectedKey);
         continueGame();
     } else {
+        audio.src = "../audio/wrong.wav";
+        audio.play();
         let lifeElement = document.getElementById("life-display");
         let currentLifeText = lifeElement.innerText;
         let currentLife = parseInt(currentLifeText);
@@ -68,9 +76,11 @@ function gameOver() {
     showElementById('score');
     let lastScore = document.getElementById("score-display").innerText;
     document.getElementById("final-score").innerText = lastScore;
+    isPlayOn = false;
 }
 //play button click functionality
 function play() {
+    isPlayOn = true;
     hideElementById('home');
     showElementById('play-ground');
 
